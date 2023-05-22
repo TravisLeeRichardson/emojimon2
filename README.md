@@ -6,8 +6,10 @@ I added a lootbox function in order to create the beginnings of an Autonomous Le
 Currently the system has some hard coded values, but smart contracts are working, and everything is tied together (fr end, back end, etc)
 
 Install Dependencies then, pnpm run dev from the top level then head over to localhost:3000. Navigate to any lootbox.
-![alt text](https://github.com/TravisLeeRichardson/emojimon2/blob/complete/emojimon%20screenshot%202.png)
+
 ![alt text](https://github.com/TravisLeeRichardson/emojimon2/blob/complete/emojimon%20screenshot%203.png)
+![alt text](https://github.com/TravisLeeRichardson/emojimon2/blob/complete/emojimon%20screenshot%201.png)
+
 
 
 > Create a Pokémon-inspired on-chain game with [MUD](https://mud.dev/)
