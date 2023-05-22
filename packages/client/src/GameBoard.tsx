@@ -5,14 +5,16 @@ import { useKeyboardMovement } from "./useKeyboardMovement";
 import { hexToArray } from "@latticexyz/utils";
 import { TerrainType, terrainTypes } from "./terrainTypes";
 import { EncounterScreen } from "./EncounterScreen";
+import { ChallengeScreen } from "./ChallengeScreen";
 import { Entity, Has, getComponentValueStrict } from "@latticexyz/recs";
 import { MonsterType, monsterTypes } from "./monsterTypes";
+import { ChallengeType, challengeTypes } from "./challengeTypes";
 
 export const GameBoard = () => {
   useKeyboardMovement();
 
   const {
-    components: { Encounter, MapConfig, Monster, Player, Position },
+    components: { Encounter, Challenge, MapConfig, Monster, Treasure, Player, Position },
     network: { playerEntity, singletonEntity },
     systemCalls: { spawn },
   } = useMUD();
@@ -57,6 +59,25 @@ export const GameBoard = () => {
       ? monsterTypes[monsterType as MonsterType]
       : null;
 
+  const challenge = useComponentValue(Challenge, playerEntity);
+  console.log("",challenge)
+  console.log("",playerEntity)
+  console.log("",Treasure)
+  
+
+
+  const challengeType = useComponentValue(
+    Treasure,
+    challenge ? (challenge.treasureBox as Entity) : undefined
+  )?.value;
+  console.log("",challengeType);
+  console.log("",challengeTypes)
+  const treasure =
+    challengeType != null && challengeType in ChallengeType
+      ? challengeTypes[challengeType as ChallengeType]
+      : null;
+  console.log(treasure)
+
   return (
     <GameMap
       width={width}
@@ -72,6 +93,15 @@ export const GameBoard = () => {
           />
         ) : undefined
       }
+       challenge={
+        challenge ? (
+          <ChallengeScreen
+          
+          challengeName={treasure?.name ?? "MissingNo"}
+          challengeEmoji={treasure?.emoji ?? "💱"}
+          />
+        ) : undefined
+      } 
     />
   );
 };

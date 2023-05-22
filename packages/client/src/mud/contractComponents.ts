@@ -22,6 +22,23 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+    Challenge: (() => {
+      const tableId = new TableId("", "Challenge");
+      return defineComponent(
+        world,
+        {
+          exists: RecsType.Boolean,
+          treasureBox: RecsType.String,
+          treasureAttempts: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
     EncounterTrigger: (() => {
       const tableId = new TableId("", "EncounterTrigger");
       return defineComponent(
@@ -39,6 +56,36 @@ export function defineContractComponents(world: World) {
     })(),
     Encounterable: (() => {
       const tableId = new TableId("", "Encounterable");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Boolean,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    ChallengeTrigger: (() => {
+      const tableId = new TableId("", "ChallengeTrigger");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Boolean,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    ChallengeAvailable: (() => {
+      const tableId = new TableId("", "ChallengeAvailab");
       return defineComponent(
         world,
         {
@@ -84,8 +131,38 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+    TreasureBoxAttempt: (() => {
+      const tableId = new TableId("", "TreasureBoxAttem");
+      return defineComponent(
+        world,
+        {
+          result: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
     Monster: (() => {
       const tableId = new TableId("", "Monster");
+      return defineComponent(
+        world,
+        {
+          value: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    ChallengeDifficulty: (() => {
+      const tableId = new TableId("", "ChallengeDifficu");
       return defineComponent(
         world,
         {
@@ -161,6 +238,22 @@ export function defineContractComponents(world: World) {
     })(),
     Position: (() => {
       const tableId = new TableId("", "Position");
+      return defineComponent(
+        world,
+        {
+          x: RecsType.Number,
+          y: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    TreasurePosition: (() => {
+      const tableId = new TableId("", "TreasurePosition");
       return defineComponent(
         world,
         {

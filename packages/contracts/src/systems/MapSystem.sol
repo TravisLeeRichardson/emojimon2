@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { System } from "@latticexyz/world/src/System.sol";
-import { Encounter, EncounterData, Encounterable, EncounterTrigger, MapConfig, Monster, Movable, Obstruction, Player, Position } from "../codegen/Tables.sol";
-import { MonsterType } from "../codegen/Types.sol";
+import { Encounter, EncounterData, Encounterable, EncounterTrigger, Challenge, ChallengeDifficulty, ChallengeData, ChallengeAvailable, ChallengeTrigger, MapConfig, Monster, TreasurePosition, Movable, Obstruction, Player, Position } from "../codegen/Tables.sol";
+import { MonsterType, ChallengeType } from "../codegen/Types.sol";
 import { addressToEntityKey } from "../addressToEntityKey.sol";
 import { positionToEntityKey } from "../positionToEntityKey.sol";
 
@@ -23,6 +23,7 @@ contract MapSystem is System {
     Position.set(player, x, y);
     Movable.set(player, true);
     Encounterable.set(player, true);
+    ChallengeAvailable.set(player, true);
   }
 
   function move(uint32 x, uint32 y) public {
@@ -30,6 +31,7 @@ contract MapSystem is System {
     require(Movable.get(player), "cannot move");
 
     require(!Encounter.getExists(player), "cannot move during an encounter");
+    require(!Challenge.getExists(player), "cannot move during a challenge");
 
     (uint32 fromX, uint32 fromY) = Position.get(player);
     require(distance(fromX, fromY, x, y) == 1, "can only move to adjacent spaces");
@@ -50,6 +52,10 @@ contract MapSystem is System {
         startEncounter(player);
       }
     }
+
+     if (ChallengeAvailable.get(player) && ChallengeTrigger.get(position)) {
+      startChallenge(player);
+  }
   }
 
   function distance(uint32 fromX, uint32 fromY, uint32 toX, uint32 toY) internal pure returns (uint32) {
@@ -64,4 +70,14 @@ contract MapSystem is System {
     Monster.set(monster, monsterType);
     Encounter.set(player, EncounterData({exists: true, monster: monster, catchAttempts: 0}));
   }
+
+  function startChallenge(bytes32 player) internal {
+    bytes32 challenge = keccak256(abi.encode(player, blockhash(block.number - 1), block.difficulty));
+    ChallengeType challengeType = ChallengeType.Easy; //hard code to easy for now
+    ChallengeDifficulty.set (challenge, challengeType);
+    Challenge.set(player, ChallengeData({exists: true, treasureBox: challenge, treasureAttempts: 0}));
+}
+
+
+
 }

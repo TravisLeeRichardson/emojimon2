@@ -1,6 +1,7 @@
 import { Has, HasValue, getComponentValue, runQuery } from "@latticexyz/recs";
 import { uuid, awaitStreamValue } from "@latticexyz/utils";
 import { MonsterCatchResult } from "../monsterCatchResult";
+import { challengeResult } from "../challengeResult";
 import { ClientComponents } from "./createClientComponents";
 import { SetupNetworkResult } from "./setupNetwork";
 
@@ -10,6 +11,8 @@ export function createSystemCalls(
   { playerEntity, singletonEntity, worldSend, txReduced$ }: SetupNetworkResult,
   {
     Encounter,
+    Challenge,
+    TreasureBoxAttempt,
     MapConfig,
     MonsterCatchAttempt,
     Obstruction,
@@ -40,6 +43,12 @@ export function createSystemCalls(
     const inEncounter = !!getComponentValue(Encounter, playerEntity);
     if (inEncounter) {
       console.warn("cannot move while in encounter");
+      return;
+    }
+
+    const inChallenge = !!getComponentValue(Challenge, playerEntity);
+    if (inChallenge) {
+      console.warn("cannot move while in challenge");
       return;
     }
 
@@ -140,11 +149,38 @@ export function createSystemCalls(
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
   };
 
+  const takeChallenge = async (answer: number) => {
+    const player = playerEntity;
+    if (!player) {
+      throw new Error("no player");
+    }
+
+    const challenge = getComponentValue(Challenge, player);
+    console.log (Challenge)
+    console.log (player)
+    if (!challenge) {
+      throw new Error("no challenge");
+    }
+
+    const tx = await worldSend("takeChallenge", [answer], {});
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+
+    const attempt = getComponentValue(TreasureBoxAttempt, player);
+    if (!attempt) {
+      throw new Error("no catch attempt found");
+    }
+
+    return attempt.result as challengeResult;
+  };
+  
+
+
   return {
     moveTo,
     moveBy,
     spawn,
     throwBall,
     fleeEncounter,
+    takeChallenge,
   };
 }

@@ -4,7 +4,7 @@ pragma solidity >=0.8.0;
 import { Script } from "forge-std/Script.sol";
 import { console } from "forge-std/console.sol";
 import { IWorld } from "../src/codegen/world/IWorld.sol";
-import { EncounterTrigger, MapConfig, Obstruction, Position } from "../src/codegen/Tables.sol";
+import { EncounterTrigger, ChallengeTrigger, MapConfig, Obstruction, Position } from "../src/codegen/Tables.sol";
 import { TerrainType } from "../src/codegen/Types.sol";
 import { positionToEntityKey } from "../src/positionToEntityKey.sol";
 
@@ -19,14 +19,15 @@ contract PostDeploy is Script {
     TerrainType O = TerrainType.None;
     TerrainType T = TerrainType.TallGrass;
     TerrainType B = TerrainType.Boulder;
+    TerrainType C = TerrainType.TreasureChest;
 
     TerrainType[20][20] memory map = [
-      [O, O, O, O, O, O, T, O, O, O, O, O, O, O, O, O, O, O, O, O],
+      [O, O, O, O, O, O, T, O, O, O, O, O, C, O, O, O, O, O, O, O],
       [O, O, T, O, O, O, O, O, T, O, O, O, O, B, O, O, O, O, O, O],
       [O, T, T, T, T, O, O, O, O, O, O, O, O, O, O, T, T, O, O, O],
       [O, O, T, T, T, T, O, O, O, O, B, O, O, O, O, O, T, O, O, O],
-      [O, O, O, O, T, T, O, O, O, O, O, O, O, O, O, O, O, T, O, O],
-      [O, O, O, B, B, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O],
+      [C, O, O, O, T, T, O, O, O, O, O, O, O, O, O, O, O, T, O, O],
+      [O, O, O, B, B, O, O, O, O, O, O, O, O, O, O, O, O, O, C, O],
       [O, T, O, O, O, B, B, O, O, O, O, T, O, O, O, O, O, B, O, O],
       [O, O, T, T, O, O, O, O, O, T, O, B, O, O, T, O, B, O, O, O],
       [O, O, T, O, O, O, O, T, T, T, O, B, B, O, O, O, O, O, O, O],
@@ -34,9 +35,9 @@ contract PostDeploy is Script {
       [O, B, O, O, O, B, O, O, T, T, O, B, O, O, T, T, O, O, O, O],
       [O, O, B, O, O, O, T, O, T, T, O, O, B, T, T, T, O, O, O, O],
       [O, O, B, B, O, O, O, O, T, O, O, O, B, O, T, O, O, O, O, O],
-      [O, O, O, B, B, O, O, O, O, O, O, O, O, B, O, T, O, O, O, O],
-      [O, O, O, O, B, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O],
-      [O, O, O, O, O, O, O, O, O, O, B, B, O, O, T, O, O, O, O, O],
+      [C, O, O, B, B, O, O, O, O, O, O, O, O, B, O, T, O, O, O, O],
+      [O, O, O, O, B, O, O, O, O, O, O, O, O, C, O, O, O, O, O, O],
+      [O, O, O, C, O, O, O, O, O, O, B, B, O, O, T, O, O, O, O, O],
       [O, O, O, O, T, O, O, O, T, B, O, O, O, T, T, O, B, O, O, O],
       [O, O, O, T, O, T, T, T, O, O, O, O, O, T, O, O, O, O, O, O],
       [O, O, O, T, T, T, T, O, O, O, O, T, O, O, O, T, O, O, O, O],
@@ -61,6 +62,10 @@ contract PostDeploy is Script {
         } else if (terrainType == TerrainType.TallGrass) {
           Position.set(world, entity, x, y);
           EncounterTrigger.set(world, entity, true);
+        }
+         else if (terrainType == TerrainType.TreasureChest) {
+          Position.set(world, entity, x, y);
+          ChallengeTrigger.set(world, entity, true);
         }
       }
     }

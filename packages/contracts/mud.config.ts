@@ -4,7 +4,9 @@ export default mudConfig({
   enums: {
     MonsterCatchResult: ["Missed", "Caught", "Fled"],
     MonsterType: ["None", "Eagle", "Rat", "Caterpillar"],
-    TerrainType: ["None", "TallGrass", "Boulder"],
+    TerrainType: ["None", "TallGrass", "Boulder", "TreasureChest"],
+    ChallengeType: ["None", "Easy", "Medium", "Hard"],
+    ChallengeResult: ["IncorrectAnswer", "CorrectAnswer"]
   },
   tables: {
     Encounter: {
@@ -17,8 +19,20 @@ export default mudConfig({
         catchAttempts: "uint256",
       },
     },
+    Challenge: {
+      keySchema: {
+        player: "bytes32",
+      },
+      schema: {
+        exists: "bool",
+        treasureBox: "bytes32",
+        treasureAttempts: "uint256",
+      },
+    },
     EncounterTrigger: "bool",
     Encounterable: "bool",
+    ChallengeTrigger: "bool",
+    ChallengeAvailable: "bool",
     MapConfig: {
       keySchema: {},
       dataStruct: false,
@@ -38,12 +52,30 @@ export default mudConfig({
         result: "MonsterCatchResult",
       },
     },
+    TreasureBoxAttempt: {
+      ephemeral: true,
+      dataStruct: false,
+      keySchema: {
+        encounter: "bytes32",
+      },
+      schema: {
+        result: "ChallengeResult",
+      },
+    },
     Monster: "MonsterType",
+    ChallengeDifficulty: "ChallengeType",
     Movable: "bool",
     Obstruction: "bool",
     OwnedBy: "bytes32",
     Player: "bool",
     Position: {
+      dataStruct: false,
+      schema: {
+        x: "uint32",
+        y: "uint32",
+      },
+    },
+    TreasurePosition: {
       dataStruct: false,
       schema: {
         x: "uint32",

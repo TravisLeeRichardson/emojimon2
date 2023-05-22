@@ -19,6 +19,7 @@ type Props = {
     entity: Entity;
   }[];
   encounter?: ReactNode;
+  challenge?: ReactNode;
 };
 
 export const GameMap = ({
@@ -28,6 +29,7 @@ export const GameMap = ({
   terrain,
   players,
   encounter,
+  challenge,
 }: Props) => {
   const {
     network: { playerEntity },
@@ -43,6 +45,15 @@ export const GameMap = ({
       setShowEncounter(false);
     }
   }, [encounter]);
+
+  const [showChallenge, setShowChallenge] = useState(false);
+  // Reset show challenge when we leave challenge
+  useEffect(() => {
+    if (!challenge) {
+      setShowChallenge(false);
+    }
+  }, [challenge]);
+
 
   return (
     <div className="inline-grid p-2 bg-lime-500 relative overflow-hidden">
@@ -83,6 +94,17 @@ export const GameMap = ({
                   }}
                 ></div>
               ) : null}
+               {challenge && mainPlayerHere ? (
+                <div
+                  className="absolute z-10 animate-battle"
+                  style={{
+                    boxShadow: "0 0 0 100vmax black",
+                  }}
+                  onAnimationEnd={() => {
+                    setShowChallenge(true);
+                  }}
+                ></div>
+              ) : null}
               <div className="flex flex-wrap gap-1 items-center justify-center relative">
                 {terrainEmoji ? (
                   <div className="absolute inset-0 flex items-center justify-center text-3xl pointer-events-none">
@@ -111,6 +133,19 @@ export const GameMap = ({
           }}
         >
           {encounter}
+        </div>
+      ) : null}
+       {challenge && showChallenge ? (
+        <div
+          className="relative z-10 -m-2 bg-black text-white flex items-center justify-center"
+          style={{
+            gridColumnStart: 1,
+            gridColumnEnd: width + 1,
+            gridRowStart: 1,
+            gridRowEnd: height + 1,
+          }}
+        >
+          {challenge}
         </div>
       ) : null}
     </div>

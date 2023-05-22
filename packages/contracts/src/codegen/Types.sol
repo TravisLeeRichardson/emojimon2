@@ -18,5 +18,18 @@ enum MonsterType {
 enum TerrainType {
   None,
   TallGrass,
-  Boulder
+  Boulder,
+  TreasureChest
+}
+
+enum ChallengeType {
+  None,
+  Easy,
+  Medium,
+  Hard
+}
+
+enum ChallengeResult {
+  IncorrectAnswer,
+  CorrectAnswer
 }
