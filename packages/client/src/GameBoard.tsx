@@ -60,18 +60,11 @@ export const GameBoard = () => {
       : null;
 
   const challenge = useComponentValue(Challenge, playerEntity);
-  console.log("",challenge)
-  console.log("",playerEntity)
-  console.log("",Treasure)
-  
-
 
   const challengeType = useComponentValue(
     Treasure,
     challenge ? (challenge.treasureBox as Entity) : undefined
   )?.value;
-  console.log("",challengeType);
-  console.log("",challengeTypes)
   const treasure =
     challengeType != null && challengeType in ChallengeType
       ? challengeTypes[challengeType as ChallengeType]
